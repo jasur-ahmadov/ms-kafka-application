@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class StudentService {
 
+    static Integer dinamicNum = 0;
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final KafkaTemplate<String, StudentResponse> kafkaTemplate;
@@ -31,9 +32,10 @@ public class StudentService {
     }
 
     public List<StudentResponse> getAllStudents() {
+        dinamicNum++;
         var students = studentRepository.findAll().stream().map(studentMapper::mapEntityToResponse).collect(Collectors.toList());
         log.info("Students: {}", students);
-        students.forEach(student -> kafkaTemplate.send("student-topic", student));
+        students.forEach(student -> kafkaTemplate.send("student-topic", 2, "key1" + dinamicNum, student));
         return students;
     }
 

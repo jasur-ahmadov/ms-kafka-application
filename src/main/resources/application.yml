@@ -2,13 +2,38 @@ spring:
   messages:
     basename: i18n/messages
   datasource:
-    url: jdbc:mysql://localhost:3306/coursedb?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true
-    username: root
-    password: 2000
+    type: com.zaxxer.hikari.HikariDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3308}/ms17_demo?createDatabaseIfNotExist=true
+    username: ${DB_CONNECTION_USERNAME:root}
+    password: ${DB_CONNECTION_PASSWORD:password}
+
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate.format_sql: true
+
+  kafka:
+    producer:
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+    properties:
+      acks: all
+      retries: 10
+      retry.backoff.ms: 1000
+      max.block.ms: 20000
+      delivery.timeout.ms: 30000
+
+    consumer:
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:${KAFKA_PORT:9092}
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: kafka-group
+      auto-offset-reset: earliest
 
 resilience4j:
   circuitbreaker:
