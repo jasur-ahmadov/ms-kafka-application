@@ -1,0 +1,26 @@
+spring:
+  messages:
+    basename: i18n/messages
+  datasource:
+    url: jdbc:mysql://localhost:3306/coursedb?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true
+    username: root
+    password: 2000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      getAllStudents:
+        # configs for close state
+        sliding-window-type: count_based
+        failure-rate-threshold: 50.0 # when 50% of requests does not work
+        sliding-window-size: 6 # total allowed requests in a row
+        # configs for open state
+        wait-duration-in-open-state: 10s # wait 10 seconds
+        # configs for half-open state
+        automatic-transition-from-open-to-half-open-enabled: true # will be half-opened
+        permitted-number-of-calls-in-half-open-state: 2 # 2 more attempts allowed every 15 seconds
+        max-wait-duration-in-half-open-state: 15000
