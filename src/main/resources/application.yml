@@ -1,39 +1,47 @@
-spring:
-  messages:
-    basename: i18n/messages
-  datasource:
-    type: com.zaxxer.hikari.HikariDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3308}/ms17_demo?createDatabaseIfNotExist=true
-    username: ${DB_CONNECTION_USERNAME:root}
-    password: ${DB_CONNECTION_PASSWORD:password}
-
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate.format_sql: true
-
+app:
   kafka:
     producer:
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:9092
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      topic: "student-topic"
 
-    properties:
-      acks: all
-      retries: 10
-      retry.backoff.ms: 1000
-      max.block.ms: 20000
-      delivery.timeout.ms: 30000
+spring: # Spring Boot configuration
 
+  messages: # internationalization messages
+    basename: i18n/messages # internationalization message file location
+
+  datasource: # database connection
+    type: com.zaxxer.hikari.HikariDataSource # connection pooling enabled to reduce latency
+    driver-class-name: com.mysql.cj.jdbc.Driver # MySQL driver class
+    url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/coursedb?createDatabaseIfNotExist=true # database URL
+    username: ${DB_CONNECTION_USERNAME:root} # database username
+    password: ${DB_CONNECTION_PASSWORD:2000} # database password
+
+  jpa: # Java Persistence API
+    hibernate: # Hibernate ORM
+      ddl-auto: create-drop # create and drop tables
+    show-sql: true # Show SQL queries
+    properties: # Hibernate properties
+      hibernate.format_sql: true # format SQL queries
+
+  kafka: # Apache Kafka configuration
+
+    producer: # Kafka producer configuration
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:9092 # Kafka broker | server URL
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer # key serializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer # value serializer
+    properties: # Kafka properties
+      acks: all # acknowledge all messages ~ higher latency but no message loss
+      retries: 10 # retry 10 times
+      retry.backoff.ms: 1000 # retry every 1 second
+      max.block.ms: 20000 # Wait for 20 seconds to throw a timeout exception if there is no space
+                          # available in the Kafka broker to immediately accept the message
+      delivery.timeout.ms: 30000 # Wait for 30 seconds to throw a timeout exception if the message
+                                 # is not delivered to the Kafka broker
     consumer:
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:${KAFKA_PORT:9092}
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      group-id: kafka-group
-      auto-offset-reset: earliest
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:${KAFKA_PORT:9092} # Kafka broker connection details.
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message keys.
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message values.
+      group-id: kafka-group # KafkaConsumer group identifier.
+      auto-offset-reset: earliest # Reset offset to earliest for new consumer groups to view all messages
 
 resilience4j:
   circuitbreaker:

@@ -15,6 +15,5 @@ public interface StudentMapper {
 
     StudentResponse mapEntityToResponse(Student student);
 
-    Student mapUpdateRequestToEntity(@MappingTarget Student student, UpdateStudentRequest request);
-
+    void mapUpdateRequestToEntity(@MappingTarget Student student, UpdateStudentRequest request);
 }

@@ -21,5 +21,4 @@ public class GenericException extends RuntimeException {
         return String.format("%s{status=%d, code='%s', message='%s'}",
                 this.getClass().getSimpleName(), status, code, message);
     }
-
 }

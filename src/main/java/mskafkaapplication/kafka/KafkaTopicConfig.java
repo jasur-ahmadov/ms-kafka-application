@@ -1,18 +1,22 @@
 package mskafkaapplication.kafka;
 
 import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.config.TopicBuilder;
 
 @Configuration
-public class TopicConfig {
+public class KafkaTopicConfig {
+
+    @Value("${app.kafka.producer.topic}")
+    private String topicName;
 
     @Bean
     public NewTopic newTopic() {
-        return TopicBuilder.name("student-topic")
+        return TopicBuilder.name(topicName)
                 .partitions(3)
-                .compact() // duplicate olanlari yazmasin
+                .compact() // Kafka will retain the latest message for each key across these partitions.
                 .replicas(1)
                 .build();
     }
