@@ -12,7 +12,7 @@ public class TopicConfig {
     public NewTopic newTopic() {
         return TopicBuilder.name("student-topic")
                 .partitions(3)
-//                .compact() // duplicate olanlari yazmasin
+                .compact() // duplicate olanlari yazmasin
                 .replicas(1)
                 .build();
     }
