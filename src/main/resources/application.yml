@@ -11,13 +11,13 @@ spring: # Spring Boot configuration
   datasource: # database connection
     type: com.zaxxer.hikari.HikariDataSource # connection pooling enabled to reduce latency
     driver-class-name: com.mysql.cj.jdbc.Driver # MySQL driver class
-    url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/coursedb?createDatabaseIfNotExist=true # database URL
+    url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/kafkadb?createDatabaseIfNotExist=true # database URL
     username: ${DB_CONNECTION_USERNAME:root} # database username
     password: ${DB_CONNECTION_PASSWORD:2000} # database password
 
   jpa: # Java Persistence API
     hibernate: # Hibernate ORM
-      ddl-auto: create-drop # create and drop tables
+      ddl-auto: update # create and drop tables
     show-sql: true # Show SQL queries
     properties: # Hibernate properties
       hibernate.format_sql: true # format SQL queries
