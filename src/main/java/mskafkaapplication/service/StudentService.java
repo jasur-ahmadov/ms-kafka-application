@@ -34,7 +34,7 @@ public class StudentService {
                 .map(studentMapper::mapEntityToResponse)
                 .collect(Collectors.toList());
         log.info("Students: {}", students);
-        students.forEach(student -> kafkaTemplate.send("student-topic", "key" + student.getId(), student));
+        students.forEach(student -> kafkaTemplate.send("student-topic", student));
         return students;
     }
 

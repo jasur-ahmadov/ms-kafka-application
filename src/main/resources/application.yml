@@ -4,44 +4,30 @@ app:
       topic: "student-topic"
 
 spring: # Spring Boot configuration
-
   messages: # internationalization messages
     basename: i18n/messages # internationalization message file location
-
   datasource: # database connection
-    type: com.zaxxer.hikari.HikariDataSource # connection pooling enabled to reduce latency
     driver-class-name: com.mysql.cj.jdbc.Driver # MySQL driver class
     url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/kafkadb?createDatabaseIfNotExist=true # database URL
     username: ${DB_CONNECTION_USERNAME:root} # database username
     password: ${DB_CONNECTION_PASSWORD:2000} # database password
-
-  jpa: # Java Persistence API
-    hibernate: # Hibernate ORM
-      ddl-auto: update # create and drop tables
-    show-sql: true # Show SQL queries
-    properties: # Hibernate properties
-      hibernate.format_sql: true # format SQL queries
-
   kafka: # Apache Kafka configuration
-
     producer: # Kafka producer configuration
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:9092 # Kafka broker | server URL
+      bootstrap-servers: pre.globalsearch_kafka_zookeeper01.kapitalbank.az:9092 # Kafka broker URL
       key-serializer: org.apache.kafka.common.serialization.StringSerializer # key serializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer # value serializer
-    properties: # Kafka properties
-      acks: all # acknowledge all messages ~ higher latency but no message loss
-      retries: 10 # retry 10 times
-      retry.backoff.ms: 1000 # retry every 1 second
-      max.block.ms: 20000 # Wait for 20 seconds to throw a timeout exception if there is no space
-                          # available in the Kafka broker to immediately accept the message
-      delivery.timeout.ms: 30000 # Wait for 30 seconds to throw a timeout exception if the message
-                                 # is not delivered to the Kafka broker
     consumer:
-      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:${KAFKA_PORT:9092} # Kafka broker connection details.
+      bootstrap-servers: pre.globalsearch_kafka_zookeeper01.kapitalbank.az:9092 # Kafka broker URL
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message keys.
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message values.
       group-id: kafka-group # KafkaConsumer group identifier.
       auto-offset-reset: earliest # Reset offset to earliest for new consumer groups to view all messages
+    properties: # Kafka properties
+      acks: all # acknowledge all messages ~ higher latency but no message loss
+      retries: 10 # retry 10 times
+      retry.backoff.ms: 1000 # retry every 1 second
+      max.block.ms: 20000 # Wait for 20 seconds to throw a timeout exception if there is no space available in the Kafka broker to immediately accept the message
+      delivery.timeout.ms: 30000 # Wait for 30 seconds to throw a timeout exception if the message is not delivered to the Kafka broker
 
 resilience4j:
   circuitbreaker:
