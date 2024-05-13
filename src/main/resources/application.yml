@@ -11,13 +11,16 @@ spring: # Spring Boot configuration
     url: jdbc:mysql://${DB_CONNECTION_IP:localhost}:${DB_CONNECTION_PORT:3306}/kafkadb?createDatabaseIfNotExist=true # database URL
     username: ${DB_CONNECTION_USERNAME:root} # database username
     password: ${DB_CONNECTION_PASSWORD:2000} # database password
+  jpa:
+    hibernate:
+      ddl-auto: update # Update the schema if necessary
   kafka: # Apache Kafka configuration
     producer: # Kafka producer configuration
-      bootstrap-servers: pre.globalsearch_kafka_zookeeper01.kapitalbank.az:9092 # Kafka broker URL
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:9092 # Kafka broker URL
       key-serializer: org.apache.kafka.common.serialization.StringSerializer # key serializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer # value serializer
     consumer:
-      bootstrap-servers: pre.globalsearch_kafka_zookeeper01.kapitalbank.az:9092 # Kafka broker URL
+      bootstrap-servers: ${KAFKA_HOST_NAME:localhost}:${KAFKA_PORT:9092} # Kafka broker URL
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message keys.
       value-deserializer: org.apache.kafka.common.serialization.StringDeserializer # Deserializer for message values.
       group-id: kafka-group # KafkaConsumer group identifier.
