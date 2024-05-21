@@ -31,7 +31,6 @@ spring: # Spring Boot configuration
       retry.backoff.ms: 1000 # retry every 1 second
       max.block.ms: 20000 # Wait for 20 seconds to throw a timeout exception if there is no space available in the Kafka broker to immediately accept the message
       delivery.timeout.ms: 30000 # Wait for 30 seconds to throw a timeout exception if the message is not delivered to the Kafka broker
-
 resilience4j:
   circuitbreaker:
     instances:

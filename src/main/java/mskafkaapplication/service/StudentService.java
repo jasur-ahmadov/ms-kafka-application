@@ -12,6 +12,7 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,7 +35,7 @@ public class StudentService {
                 .map(studentMapper::mapEntityToResponse)
                 .collect(Collectors.toList());
         log.info("Students: {}", students);
-        students.forEach(student -> kafkaTemplate.send("student-topic", student));
+        students.forEach(student -> kafkaTemplate.send("student-topic", UUID.randomUUID().toString(), student));
         return students;
     }
 
