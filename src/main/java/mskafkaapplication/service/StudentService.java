@@ -6,6 +6,7 @@ import mskafkaapplication.dto.StudentResponse;
 import mskafkaapplication.dto.request.CreateStudentRequest;
 import mskafkaapplication.dto.request.UpdateStudentRequest;
 import mskafkaapplication.error.StudentNotFoundException;
+import mskafkaapplication.kafka.KafkaTopicConfig;
 import mskafkaapplication.mapper.StudentMapper;
 import mskafkaapplication.repository.StudentRepository;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -23,6 +24,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final KafkaTemplate<String, StudentResponse> kafkaTemplate;
+    private final KafkaTopicConfig kafkaTopicConfig;
 
     public void createStudent(CreateStudentRequest request) {
         var student = studentMapper.mapRequestToStudent(request);
@@ -35,7 +37,7 @@ public class StudentService {
                 .map(studentMapper::mapEntityToResponse)
                 .collect(Collectors.toList());
         log.info("Students: {}", students);
-        students.forEach(student -> kafkaTemplate.send("student-topic", UUID.randomUUID().toString(), student));
+        students.forEach(student -> kafkaTemplate.send(kafkaTopicConfig.topicName, UUID.randomUUID().toString(), student));
         return students;
     }
 
